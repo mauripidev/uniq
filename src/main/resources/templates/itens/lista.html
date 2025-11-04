@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>Itens</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Itens</h2>
+            <a th:href="@{/itens/novo}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Novo Item
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div th:if="${#lists.isEmpty(itens)}" class="alert alert-info">
+                    Nenhum item cadastrado.
+                </div>
+
+                <table th:if="${not #lists.isEmpty(itens)}" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Descrição</th>
+                            <th>Preço de Custo</th>
+                            <th>Unidade de Medida</th>
+                            <th>Código</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${itens}">
+                            <td th:text="${item.id}"></td>
+                            <td th:text="${item.descricao}"></td>
+                            <td th:text="${#numbers.formatCurrency(item.precoCusto)}"></td>
+                            <td th:text="${item.unidadeMedida}"></td>
+                            <td th:text="${item.codigo}"></td>
+                            <td>
+                                <div class="btn-group">
+                                    <a th:href="@{/itens/{id}/editar(id=${item.id})}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a th:href="@{/itens/{id}/excluir(id=${item.id})}" class="btn btn-sm btn-outline-danger"
+                                       onclick="return confirm('Tem certeza que deseja excluir este item?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

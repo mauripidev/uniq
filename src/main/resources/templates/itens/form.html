@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title th:text="${item.id == null ? 'Novo Item' : 'Editar Item'}"></title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 th:text="${item.id == null ? 'Novo Item' : 'Editar Item'}"></h2>
+            <a th:href="@{/itens}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <form th:action="@{/itens}" th:object="${item}" method="post">
+                    <input type="hidden" th:field="*{id}">
+
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <input type="text" class="form-control" id="descricao" th:field="*{descricao}" required>
+                        <div class="text-danger" th:if="${#fields.hasErrors('descricao')}" th:errors="*{descricao}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="precoCusto" class="form-label">Preço de Custo</label>
+                        <input type="number" class="form-control" id="precoCusto" th:field="*{precoCusto}" step="0.01" min="0" required>
+                        <div class="text-danger" th:if="${#fields.hasErrors('precoCusto')}" th:errors="*{precoCusto}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="unidadeMedida" class="form-label">Unidade de Medida</label>
+                        <input type="text" class="form-control" id="unidadeMedida" th:field="*{unidadeMedida}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="codigo" class="form-label">Código</label>
+                        <input type="text" class="form-control" id="codigo" th:field="*{codigo}">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Salvar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

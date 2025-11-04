@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title th:text="'Itens do Produto: ' + ${produtoFinal.nome}"></title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 th:text="'Itens do Produto: ' + ${produtoFinal.nome}"></h2>
+            <a th:href="@{/produtos-finais}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Adicionar Item</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/produtos-finais/{id}/itens(id=${produtoFinal.id})}" th:object="${itemProdutoFinal}" method="post">
+                            <div class="mb-3">
+                                <label for="item" class="form-label">Item</label>
+                                <select class="form-select" id="item" th:field="*{item}" required>
+                                    <option value="">Selecione um item</option>
+                                    <option th:each="item : ${itens}" th:value="${item.id}" th:text="${item.descricao + ' - ' + #numbers.formatCurrency(item.precoCusto)}"></option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="quantidade" class="form-label">Quantidade</label>
+                                <input type="number" class="form-control" id="quantidade" th:field="*{quantidade}" step="0.01" min="0.01" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> Adicionar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0">Informações do Produto</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Nome:</strong> <span th:text="${produtoFinal.nome}"></span></p>
+                        <p><strong>Descrição:</strong> <span th:text="${produtoFinal.descricao}"></span></p>
+                        <p><strong>Custo Total:</strong> <span th:text="${#numbers.formatCurrency(produtoFinal.custoTotal)}"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="card-title mb-0">Itens do Produto</h5>
+            </div>
+            <div class="card-body">
+                <div th:if="${#lists.isEmpty(produtoFinal.itens)}" class="alert alert-info">
+                    Este produto não possui itens cadastrados.
+                </div>
+
+                <table th:if="${not #lists.isEmpty(produtoFinal.itens)}" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Preço Unitário</th>
+                            <th>Quantidade</th>
+                            <th>Subtotal</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="itemProduto : ${produtoFinal.itens}">
+                            <td th:text="${itemProduto.item.descricao}"></td>
+                            <td th:text="${#numbers.formatCurrency(itemProduto.item.precoCusto)}"></td>
+                            <td th:text="${itemProduto.quantidade}"></td>
+                            <td th:text="${#numbers.formatCurrency(itemProduto.subtotal)}"></td>
+                            <td>
+                                <a th:href="@{/produtos-finais/{produtoId}/itens/{itemId}/excluir(produtoId=${produtoFinal.id}, itemId=${itemProduto.id})}" 
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Tem certeza que deseja remover este item?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3" class="text-end">Total:</th>
+                            <th th:text="${#numbers.formatCurrency(produtoFinal.custoTotal)}"></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
